@@ -17,8 +17,8 @@ input           WBRegWrite_i;
 input  [4:0]    WBRd_i;
 input           MEMRegWrite_i;
 input  [4:0]    MEMRd_i;
-output reg [2:0] ForwardA_o;
-output reg [2:0] ForwardB_o;
+output reg [1:0] ForwardA_o;
+output reg [1:0] ForwardB_o;
 
 always @(*) begin
     if (MEMRegWrite_i

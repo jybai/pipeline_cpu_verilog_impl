@@ -43,36 +43,36 @@ initial begin
     // [RegisterInitialization] DO NOT REMOVE THIS FLAG !!!
 
     // TODO: initialize your pipeline registers
-    CPU.EX_MEM.RegWrite_o = 1'b0;
-    CPU.EX_MEM.MemtoReg_o = 1'b0;
-    CPU.EX_MEM.MemRead_o = 1'b0;
-    CPU.EX_MEM.MemWrite_o = 1'b0;
-    CPU.EX_MEM.ALUResult_o = 32'b0;
-    CPU.EX_MEM.MUX2Result_o = 32'b0;
-    CPU.EX_MEM.Instruction4_o = 4'b0;
+    CPU.EX_MEM.RegWrite = 1'b0;
+    CPU.EX_MEM.MemtoReg = 1'b0;
+    CPU.EX_MEM.MemRead = 1'b0;
+    CPU.EX_MEM.MemWrite = 1'b0;
+    CPU.EX_MEM.ALUResult = 32'b0;
+    CPU.EX_MEM.MUX2Result = 32'b0;
+    CPU.EX_MEM.Instruction4 = 4'b0;
 
-    CPU.ID_EX.RegWrite_o = 1'b0;
-    CPU.ID_EX.MemtoReg_o = 1'b0;
-    CPU.ID_EX.MemRead_o = 1'b0;
-    CPU.ID_EX.MemWrite_o = 1'b0;
-    CPU.ID_EX.ALUOp_o = 1'b0;
-    CPU.ID_EX.ALUSrc_o = 1'b0;
-    CPU.ID_EX.RDdata1_o = 32'b0;
-    CPU.ID_EX.RDdata2_o = 32'b0;
-    CPU.ID_EX.Imm_o = 32'b0;
-    CPU.ID_EX.Instruction1_o = 10'b0;
-    CPU.ID_EX.EXRs1_o = 5'b0;
-    CPU.ID_EX.EXRs2_o = 5'b0;
-    CPU.ID_EX.Instruction4_o = 5'b0;
+    CPU.ID_EX.RegWrite = 1'b0;
+    CPU.ID_EX.MemtoReg = 1'b0;
+    CPU.ID_EX.MemRead = 1'b0;
+    CPU.ID_EX.MemWrite = 1'b0;
+    CPU.ID_EX.ALUOp = 2'b0;
+    CPU.ID_EX.ALUSrc = 1'b0;
+    CPU.ID_EX.RDdata1 = 32'b0;
+    CPU.ID_EX.RDdata2 = 32'b0;
+    CPU.ID_EX.Imm = 32'b0;
+    CPU.ID_EX.Instruction1 = 10'b0;
+    CPU.ID_EX.Instruction2 = 5'b0;
+    CPU.ID_EX.Instruction3 = 5'b0;
+    CPU.ID_EX.Instruction4 = 5'b0;
 
-    CPU.IF_ID.pc_o = 32'b0;
-    CPU.IF_ID.Instruction_o = 32'b0;
+    CPU.IF_ID.pc = 32'b0;
+    CPU.IF_ID.Instruction = 32'b0;
 
-    CPU.MEM_WB.RegWrite_o = 1'b0;
-    CPU.MEM_WB.MemtoReg_o = 1'b0;
-    CPU.MEM_WB.ALUResult_o = 32'b0;
-    CPU.MEM_WB.RDdata_o = 32'b0;
-    CPU.MEM_WB.Instruction4_o = 5'b0;
+    CPU.MEM_WB.RegWrite = 1'b0;
+    CPU.MEM_WB.MemtoReg = 1'b0;
+    CPU.MEM_WB.ALUResult = 32'b0;
+    CPU.MEM_WB.RDdata = 32'b0;
+    CPU.MEM_WB.Instruction4 = 5'b0;
 
     // Load instructions into instruction memory
     // Make sure you change back to "instruction.txt" before submission
@@ -98,8 +98,8 @@ always@(posedge Clk) begin
         $finish;
 
     // put in your own signal to count stall and flush
-    if(CPU.Hazard_Detection.Stall_o == 1 && CPU.Control.Branch_o == 0)stall = stall + 1;
-    if(CPU.Flush == 1)flush = flush + 1;  
+    if(CPU.Hazard_Detection.Stall_o == 1 && CPU.Control.Branch_o == 0) stall = stall + 1;
+    if(CPU.flush == 1) flush = flush + 1;  
 
     // print PC
     // DO NOT CHANGE THE OUTPUT FORMAT
