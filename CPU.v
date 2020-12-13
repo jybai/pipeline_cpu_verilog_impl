@@ -56,7 +56,7 @@ Adder Add_PC(
 
 MUX32 MUX_PC(
     .data1_i    (pc_next),
-    .data2_i    (),  // @TODO
+    .data2_i    (ID_Adder.data_o),
     .select_i   (flush),
     .data_o     (PC.pc_i)
 );
