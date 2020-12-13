@@ -14,29 +14,38 @@ output reg     [2:0] ALUCtrl_o;
 `define ADD 3'b011
 `define SUB 3'b100
 `define MUL 3'b101
-`define ADDI 3'b110
-`define SRAI 3'b111
+`define SRAI 3'b110
+
+`define ALUOP_RTYPE 2'b00
+`define ALUOP_IMM 2'b01
+
+`define  FUNCT_AND 10'b0000000_111
+`define  FUNCT_XOR 10'b0000000_100
+`define  FUNCT_SLL 10'b0000000_001
+`define  FUNCT_ADD 10'b0000000_000
+`define  FUNCT_SUB 10'b0100000_000
+`define  FUNCT_MUL 10'b0000001_000
+`define  FUNCT_ADDI_BEQ 3'b000
+`define  FUNCT_SRAI 3'b101
+`define  FUNCT_LSW 3'b010
 
 always @ (*) begin
-  if (ALUOp_i[0] == 1) begin
-    if (funct_i[2:0] == 3'b000)
-      ALUCtrl_o = `ADDI;
-    else
-      ALUCtrl_o = `SRAI;
+  if (ALUOp_i == `ALUOP_RTYPE) begin
+    case (funct_i)
+      `FUNCT_AND: ALUCtrl_o = `AND;
+      `FUNCT_XOR: ALUCtrl_o = `XOR;
+      `FUNCT_SLL: ALUCtrl_o = `SLL;
+      `FUNCT_ADD: ALUCtrl_o = `ADD;
+      `FUNCT_SUB: ALUCtrl_o = `SUB;
+      `FUNCT_MUL: ALUCtrl_o = `MUL;
+    endcase
   end
-  else begin
-    if (funct_i == 10'b0000000_111)
-      ALUCtrl_o = `AND;
-    else if (funct_i == 10'b0000000_100)
-      ALUCtrl_o = `XOR;
-    else if (funct_i == 10'b0000000_001)
-      ALUCtrl_o = `SLL;
-    else if (funct_i == 10'b0000000_000)
-      ALUCtrl_o = `ADD;
-    else if (funct_i == 10'b0100000_000)
-      ALUCtrl_o = `SUB;
-    else
-      ALUCtrl_o = `MUL;
+  else if (ALUOp_i == `ALUOP_IMM) begin
+    case (funct_i[2:0])
+      `FUNCT_ADDI_BEQ: ALUCtrl_o = `ADD;
+      `FUNCT_LSW: ALUCtrl_o = `ADD;
+      `FUNCT_SRAI: ALUCtrl_o = `SRAI;
+    endcase
   end
 end
 
