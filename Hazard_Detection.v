@@ -6,8 +6,8 @@ module Hazard_Detection
     EXMemRead_i,
     PCWrite_o,
     Stall_o,
-    NoOp_o,
-)
+    NoOp_o
+);
 
 // Ports
 input   [4:0]   IDRs1_i;
@@ -32,4 +32,4 @@ always @(*) begin
     end
 end
 
-endmodule;
+endmodule
