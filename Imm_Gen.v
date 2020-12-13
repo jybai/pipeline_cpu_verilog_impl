@@ -1,4 +1,4 @@
-module Imm_gen(
+module Imm_Gen(
   instr_i,
   imm_o
 );
