@@ -9,6 +9,7 @@ module MEM_WB
     RegWrite_o,
     MemtoReg_o,
     ALUResult_o,
+    RDdata_o,
     Instruction4_o, // 11-7
 );
 
