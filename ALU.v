@@ -18,8 +18,7 @@ output                   Zero_o; // abandon since not used
 `define ADD 3'b011
 `define SUB 3'b100
 `define MUL 3'b101
-`define ADDI 3'b110
-`define SRAI 3'b111
+`define SRAI 3'b110
 
 always@ (*) begin
   case (ALUCtrl_i)
@@ -29,7 +28,6 @@ always@ (*) begin
     `ADD: data_o = data1_i + data2_i;
     `SUB: data_o = data1_i - data2_i;
     `MUL: data_o = data1_i * data2_i;
-    `ADDI: data_o = data1_i + data2_i;
     `SRAI: data_o = data1_i >>> data2_i[4:0];
   endcase
 end
