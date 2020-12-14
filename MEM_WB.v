@@ -1,5 +1,6 @@
 module MEM_WB
 (
+    start_i,
     clk_i,
     RegWrite_i,
     MemtoReg_i,
@@ -14,6 +15,7 @@ module MEM_WB
 );
 
 // Ports
+input           start_i;
 input           clk_i;
 input           RegWrite_i;
 input           MemtoReg_i;
@@ -47,6 +49,14 @@ always @(posedge clk_i) begin
     ALUResult <= ALUResult_i;
     RDdata <= RDdata_i;
     Instruction4 <= Instruction4_i;
+end
+
+always @(negedge start_i) begin
+    RegWrite <= 0;
+    MemtoReg <= 0;
+    ALUResult <= 0;
+    RDdata <= 0;
+    Instruction4 <= 0;
 end
 
 endmodule

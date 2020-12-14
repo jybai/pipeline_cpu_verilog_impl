@@ -17,7 +17,7 @@ output           MemToReg_o;
 output           MemRead_o;
 output           MemWrite_o;
 output           Branch_o;
-output     [1:0] ALUOp_o;
+output reg [1:0] ALUOp_o;
 output           ALUSrc_o;
 
 `define OP_RTYPE 7'b0110011
@@ -33,7 +33,17 @@ assign MemToReg_o = NoOp_i ? 0 : Op_i == `OP_LW; // only when lw
 assign MemRead_o = NoOp_i ? 0 : Op_i == `OP_LW; // https://stackoverflow.com/questions/54726371/mips-single-cycle-why-are-memread-and-memtoreg-separate
 assign MemWrite_o = NoOp_i ? 0 : Op_i == `OP_SW; // only when sw
 assign Branch_o = NoOp_i ? 0 : Op_i == `OP_BEQ; // only when beq
-assign ALUOp_o = NoOp_i ? 0 : Op_i == `OP_RTYPE ? `ALUOP_RTYPE : `ALUOP_IMM;
-assign ALUSrc_o = NoOp_i ? 0 : !Op_i[5];
+// assign ALUOp_o = NoOp_i ? 0 : (Op_i == `OP_RTYPE ? `ALUOP_RTYPE : `ALUOP_IMM);
+assign ALUSrc_o = NoOp_i ? 0 : Op_i != `OP_RTYPE;
+
+always @(*) begin
+    if (NoOp_i) begin
+        ALUOp_o <= 0;
+    end
+    else begin
+        if (Op_i == `OP_RTYPE) ALUOp_o <= `ALUOP_RTYPE;
+        else ALUOp_o <= `ALUOP_IMM;
+    end
+end
 
 endmodule

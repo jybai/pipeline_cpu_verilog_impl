@@ -23,8 +23,10 @@ wire           [31:0] instr;
 wire           [31:0] read_data_1;
 wire           [31:0] read_data_2;
 
+wire           [31:0] foobar;
+
 wire                NoOp;
-wire                MemToReg;
+wire                MemtoReg;
 wire                MemRead;
 wire                MemWrite;
 wire                Branch;
@@ -32,6 +34,7 @@ wire                PCWrite;
 wire                flush;
 
 assign flush = (Control.Branch_o) && (read_data_1 == read_data_2);
+// assign foobar = ALU.data_o;
 
 wire         [31:0] ID_pc;
 wire         [31:0] WB_WriteData;
@@ -42,7 +45,7 @@ Control Control(
     .ALUOp_o    (ALUOp),
     .ALUSrc_o   (ALUSrc),
     .RegWrite_o (RegWrite),
-    .MemToReg_o (MemToReg),
+    .MemToReg_o (MemtoReg),
     .MemRead_o  (MemRead),
     .MemWrite_o (MemWrite),
     .Branch_o   (Branch)
@@ -54,22 +57,12 @@ Adder Add_PC(
     .data_o     (pc_next)
 );
 
-// MUX32 MUX_PC(
-//     .data1_i    (pc_next),
-//     .data2_i    (ID_Adder.data_o),
-//     .select_i   (flush),
-//     .data_o     (PC.pc_i)
-// );
-
 MUX32 MUX_PC(
     .data1_i    (pc_next),
     .data2_i    (ID_Adder.data_o),
     .select_i   (flush),
     .data_o     (PC.pc_i)
 );
-
-// flush = x
-// data_o = x if select_i = 1
 
 PC PC(
     .clk_i      (clk_i),
@@ -79,15 +72,6 @@ PC PC(
     .pc_i       (MUX_PC.data_o),
     .pc_o       (pc_now)
 );
-
-// PC PC(
-//     .clk_i      (clk_i),
-//     .rst_i      (rst_i),
-//     .start_i    (start_i),
-//     .PCWrite_i  (PCWrite),
-//     .pc_i       (pc_next),
-//     .pc_o       (pc_now)
-// );
 
 Instruction_Memory Instruction_Memory(
     .addr_i     (pc_now),
@@ -108,7 +92,7 @@ Registers Registers(
 MUX32 MUX_ALUSrc(
     .data1_i    (MUX_EX2.data_o),
     .data2_i    (ID_EX.Imm_o),
-    .select_i   (ID_EX.ALUSrc),
+    .select_i   (ID_EX.ALUSrc_o),
     .data_o     (ALU.data2_i)
 );
 
@@ -118,20 +102,22 @@ Imm_Gen Imm_Gen(
 );
   
 ALU ALU(
-    .data1_i    (MUX_EX2.data_o),
+    .data1_i    (MUX_EX1.data_o),
     .data2_i    (MUX_ALUSrc.data_o),
-    .ALUCtrl_i  (ALU_Control.ALUCtrl_o),
-    .data_o     (EX_MEM.ALUResult_i),
+    .ALUCtrl_i  (ALUCtrl),
+    // .data_o     (EX_MEM.ALUResult_i),
+    .data_o     (foobar),
     .Zero_o     ()
 );
 
 ALU_Control ALU_Control(
-    .funct_i    ({instr[31:25], instr[14:12]}),
-    .ALUOp_i    (ALUOp),
+    .funct_i    (ID_EX.Instruction1_o),
+    .ALUOp_i    (ID_EX.ALUOp_o),
     .ALUCtrl_o  (ALUCtrl)
 );
 
 IF_ID IF_ID(
+    .start_i    (start_i),
     .clk_i      (clk_i),
     .stall_i    (Hazard_Detection.Stall_o),
     .flush_i    (flush),
@@ -148,6 +134,7 @@ Adder ID_Adder(
 );
 
 ID_EX ID_EX(
+    .start_i        (start_i),
     .clk_i          (clk_i),
     .RegWrite_i     (RegWrite),
     .MemtoReg_i     (MemtoReg),
@@ -196,12 +183,14 @@ MUX32_4WAY MUX_EX2(
 );
 
 EX_MEM EX_MEM(
+    .start_i        (start_i),
     .clk_i          (clk_i),
     .RegWrite_i     (ID_EX.RegWrite_o),
     .MemtoReg_i     (ID_EX.MemtoReg_o),
     .MemRead_i      (ID_EX.MemRead_o), 
     .MemWrite_i     (ID_EX.MemWrite_o),
-    .ALUResult_i    (ALU.data_o),
+    // .ALUResult_i    (ALU.data_o),
+    .ALUResult_i    (foobar),
     .MUX2Result_i   (MUX_EX2.data_o),
     .Instruction4_i (ID_EX.Instruction4_o),
     .RegWrite_o     (MEM_WB.RegWrite_i),
@@ -223,6 +212,7 @@ Data_Memory Data_Memory(
 );
 
 MEM_WB MEM_WB(
+    .start_i        (start_i),
     .clk_i          (clk_i),
     .RegWrite_i     (EX_MEM.RegWrite_o),
     .MemtoReg_i     (EX_MEM.MemtoReg_o),
@@ -261,7 +251,7 @@ Forwarding_Unit Forwarding_Unit(
     .MEMRegWrite_i  (EX_MEM.RegWrite_o),
     .MEMRd_i        (EX_MEM.Instruction4_o),
     .ForwardA_o     (MUX_EX1.select_i),
-    .ForwardB_o     (MUX_EX1.select_i)
+    .ForwardB_o     (MUX_EX2.select_i)
 );
 
 endmodule

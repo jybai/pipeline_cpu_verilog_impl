@@ -1,5 +1,6 @@
 module EX_MEM
 (
+    start_i,
     clk_i,
     RegWrite_i,
     MemtoReg_i,
@@ -18,6 +19,7 @@ module EX_MEM
 );
 
 // Ports
+input           start_i;
 input           clk_i;
 input           RegWrite_i;
 input           MemtoReg_i;
@@ -61,6 +63,16 @@ always @(posedge clk_i) begin
     ALUResult <= ALUResult_i;
     MUX2Result <= MUX2Result_i;
     Instruction4 <= Instruction4_i;
+end
+
+always @(negedge start_i) begin
+    RegWrite <= 0;
+    MemtoReg <= 0;
+    MemRead <= 0;
+    MemWrite <= 0;
+    ALUResult <= 0;
+    MUX2Result <= 0;
+    Instruction4 <= 0;
 end
 
 endmodule

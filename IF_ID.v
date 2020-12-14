@@ -1,5 +1,6 @@
 module IF_ID
 (
+    start_i,
     clk_i,
     stall_i,
     flush_i,
@@ -10,6 +11,7 @@ module IF_ID
 );
 
 // Ports
+input           start_i;
 input           clk_i;
 input           stall_i;
 input           flush_i;
@@ -34,6 +36,11 @@ always @(posedge clk_i) begin
     end
 
     if (flush_i) Instruction <= 0;
+end
+
+always @(negedge start_i) begin
+    pc <= 0;
+    Instruction <= 0;
 end
 
 endmodule

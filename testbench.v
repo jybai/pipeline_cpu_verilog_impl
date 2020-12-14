@@ -43,36 +43,36 @@ initial begin
     // [RegisterInitialization] DO NOT REMOVE THIS FLAG !!!
 
     // TODO: initialize your pipeline registers
-    CPU.EX_MEM.RegWrite = 1'b0;
-    CPU.EX_MEM.MemtoReg = 1'b0;
-    CPU.EX_MEM.MemRead = 1'b0;
-    CPU.EX_MEM.MemWrite = 1'b0;
-    CPU.EX_MEM.ALUResult = 32'b0;
-    CPU.EX_MEM.MUX2Result = 32'b0;
-    CPU.EX_MEM.Instruction4 = 4'b0;
+    // CPU.EX_MEM.RegWrite = 1'b0;
+    // CPU.EX_MEM.MemtoReg = 1'b0;
+    // CPU.EX_MEM.MemRead = 1'b0;
+    // CPU.EX_MEM.MemWrite = 1'b0;
+    // CPU.EX_MEM.ALUResult = 32'b0;
+    // CPU.EX_MEM.MUX2Result = 32'b0;
+    // CPU.EX_MEM.Instruction4 = 4'b0;
 
-    CPU.ID_EX.RegWrite = 1'b0;
-    CPU.ID_EX.MemtoReg = 1'b0;
-    CPU.ID_EX.MemRead = 1'b0;
-    CPU.ID_EX.MemWrite = 1'b0;
-    CPU.ID_EX.ALUOp = 2'b0;
-    CPU.ID_EX.ALUSrc = 1'b0;
-    CPU.ID_EX.RDdata1 = 32'b0;
-    CPU.ID_EX.RDdata2 = 32'b0;
-    CPU.ID_EX.Imm = 32'b0;
-    CPU.ID_EX.Instruction1 = 10'b0;
-    CPU.ID_EX.Instruction2 = 5'b0;
-    CPU.ID_EX.Instruction3 = 5'b0;
-    CPU.ID_EX.Instruction4 = 5'b0;
+    // CPU.ID_EX.RegWrite = 1'b0;
+    // CPU.ID_EX.MemtoReg = 1'b0;
+    // CPU.ID_EX.MemRead = 1'b0;
+    // CPU.ID_EX.MemWrite = 1'b0;
+    // CPU.ID_EX.ALUOp = 2'b0;
+    // CPU.ID_EX.ALUSrc = 1'b0;
+    // CPU.ID_EX.RDdata1 = 32'b0;
+    // CPU.ID_EX.RDdata2 = 32'b0;
+    // CPU.ID_EX.Imm = 32'b0;
+    // CPU.ID_EX.Instruction1 = 10'b0;
+    // CPU.ID_EX.Instruction2 = 5'b0;
+    // CPU.ID_EX.Instruction3 = 5'b0;
+    // CPU.ID_EX.Instruction4 = 5'b0;
 
-    CPU.IF_ID.pc = 32'b0;
-    CPU.IF_ID.Instruction = 32'b0;
+    // CPU.IF_ID.pc = 32'b0;
+    // CPU.IF_ID.Instruction = 32'b0;
 
-    CPU.MEM_WB.RegWrite = 1'b0;
-    CPU.MEM_WB.MemtoReg = 1'b0;
-    CPU.MEM_WB.ALUResult = 32'b0;
-    CPU.MEM_WB.RDdata = 32'b0;
-    CPU.MEM_WB.Instruction4 = 5'b0;
+    // CPU.MEM_WB.RegWrite = 1'b0;
+    // CPU.MEM_WB.MemtoReg = 1'b0;
+    // CPU.MEM_WB.ALUResult = 32'b0;
+    // CPU.MEM_WB.RDdata = 32'b0;
+    // CPU.MEM_WB.Instruction4 = 5'b0;
 
     // Load instructions into instruction memory
     // Make sure you change back to "instruction.txt" before submission
@@ -88,11 +88,12 @@ initial begin
     
     #(`CYCLE_TIME/4) 
 
-    $fdisplay(outfile, "Registers.RS1addr_i = %d; Control.Op_i = %d\n", CPU.Registers.RS1addr_i, CPU.Control.Op_i);
-    $fdisplay(outfile, "IF_ID.Instruction = %d; IF_ID.Instruction_o = %d; ID_PC = %d; instr = %d; imm_extended = %d\n", CPU.IF_ID.Instruction, CPU.IF_ID.Instruction_o, CPU.instr, CPU.ID_pc, CPU.imm_extended);
-    $fdisplay(outfile, "Control.MemRead = %d; Control.Branch_o = %d; read_data_1 = %d; read_data_2 = %d\n", CPU.Control.MemRead_o, CPU.Control.Branch_o, CPU.read_data_1, CPU.read_data_2);
-    $fdisplay(outfile, "ID_EX.MemRead_i = %d; ID_EX.MemRead = %d; ID_EX.RDdata1 = %d; ID_EX.RDdata2 = %d; ID_EX.Instruction4 = %d\n", CPU.ID_EX.MemRead_i, CPU.ID_EX.MemRead, CPU.ID_EX.RDdata1, CPU.ID_EX.RDdata2, CPU.ID_EX.Instruction4);
-    $fdisplay(outfile, "HD.IDRs1_i = %d; HD.IDRs2_i = %d; HD.EXRd_i = %d; HD.EXMemRead = %d; HD.NoOp_o = %d;\n", CPU.Hazard_Detection.IDRs1_i, CPU.Hazard_Detection.IDRs2_i, CPU.Hazard_Detection.EXRd_i, CPU.Hazard_Detection.EXMemRead_i, CPU.Hazard_Detection.NoOp_o);
+    // $fdisplay(outfile, "ALUResult_i = %d; ALU.data_o = %d; foobar = %d\n", CPU.EX_MEM.ALUResult_i, CPU.ALU.data_o, CPU.foobar);
+    // $fdisplay(outfile, "Registers.RS1addr_i = %d; Control.Op_i = %d\n", CPU.Registers.RS1addr_i, CPU.Control.Op_i);
+    // $fdisplay(outfile, "IF_ID.Instruction = %d; IF_ID.Instruction_o = %d; ID_PC = %d; instr = %d; imm_extended = %d\n", CPU.IF_ID.Instruction, CPU.IF_ID.Instruction_o, CPU.instr, CPU.ID_pc, CPU.imm_extended);
+    // $fdisplay(outfile, "Control.MemRead = %d; Control.Branch_o = %d; read_data_1 = %d; read_data_2 = %d\n", CPU.Control.MemRead_o, CPU.Control.Branch_o, CPU.read_data_1, CPU.read_data_2);
+    // $fdisplay(outfile, "ID_EX.MemRead_i = %d; ID_EX.MemRead = %d; ID_EX.RDdata1 = %d; ID_EX.RDdata2 = %d; ID_EX.Instruction4 = %d\n", CPU.ID_EX.MemRead_i, CPU.ID_EX.MemRead, CPU.ID_EX.RDdata1, CPU.ID_EX.RDdata2, CPU.ID_EX.Instruction4);
+    // $fdisplay(outfile, "HD.IDRs1_i = %d; HD.IDRs2_i = %d; HD.EXRd_i = %d; HD.EXMemRead = %d; HD.NoOp_o = %d;\n", CPU.Hazard_Detection.IDRs1_i, CPU.Hazard_Detection.IDRs2_i, CPU.Hazard_Detection.EXRd_i, CPU.Hazard_Detection.EXMemRead_i, CPU.Hazard_Detection.NoOp_o);
 
     Reset = 0;
     Start = 1;
@@ -108,21 +109,22 @@ always@(posedge Clk) begin
     if(CPU.flush == 1) flush = flush + 1;  
 
     // $fdisplay(outfile, "Branch = %d\n", CPU.Branch);
-    $fdisplay(outfile, "WB_WriteData = %d\n", CPU.WB_WriteData);
-    $fdisplay(outfile, "IF_ID.Instruction = %d; IF_ID.Instruction_o = %d; ID_PC = %d; instr = %d; imm_extended = %d\n", CPU.IF_ID.Instruction, CPU.IF_ID.Instruction_o, CPU.instr, CPU.ID_pc, CPU.imm_extended);
+    // $fdisplay(outfile, "WB_WriteData = %d\n", CPU.WB_WriteData);
+    // $fdisplay(outfile, "IF_ID.Instruction = %d; IF_ID.Instruction_o = %d; ID_PC = %d; instr = %d; imm_extended = %d\n", CPU.IF_ID.Instruction, CPU.IF_ID.Instruction_o, CPU.instr, CPU.ID_pc, CPU.imm_extended);
     // $fdisplay(outfile, "Add_PC.data1_in = %d; Add_PC.data2_in = %d; Add_PC.data_o= %d\n", CPU.Add_PC.data1_in, CPU.Add_PC.data2_in, CPU.Add_PC.data_o);
     // $fdisplay(outfile, "pc_now = %d; pc_next = %d; ID_Adder.data_o = %d\n", CPU.pc_now, CPU.pc_next, CPU.ID_Adder.data_o);
     // $fdisplay(outfile, "MUX_PC.data1_i = %d; MUX_PC.data2_i = %d; MUX_PC.data_o = %d\n", CPU.MUX_PC.data1_i, CPU.MUX_PC.data2_i, CPU.MUX_PC.data_o);
-    $fdisplay(outfile, "ID_Adder.data1_in = %d; ID_Adder.data2_in = %d; ID_Adder.data_o = %d\n", CPU.ID_Adder.data1_in, CPU.ID_Adder.data2_in, CPU.ID_Adder.data_o);
-    // $fdisplay(outfile, "PC.pc_i = %d; PC.pc_o = %d\n", CPU.PC.pc_i, CPU.PC.pc_o);
-    $fdisplay(outfile, "NoOp = %d; Stall = %d; PCWrite = %d; flush = %d\n", CPU.Hazard_Detection.NoOp_o, CPU.Hazard_Detection.Stall_o, CPU.Hazard_Detection.PCWrite_o, CPU.flush);
-    $fdisplay(outfile, "Control.MemRead = %d; Control.Branch_o = %d; read_data_1 = %d; read_data_2 = %d\n", CPU.Control.MemRead_o, CPU.Control.Branch_o, CPU.read_data_1, CPU.read_data_2);
-    $fdisplay(outfile, "ID_EX.MemRead_i = %d; ID_EX.MemRead = %d; ID_EX.RDdata1 = %d; ID_EX.RDdata2 = %d\n", CPU.ID_EX.MemRead_i, CPU.ID_EX.MemRead, CPU.ID_EX.RDdata1, CPU.ID_EX.RDdata2);
+    // $fdisplay(outfile, "ID_Adder.data1_in = %d; ID_Adder.data2_in = %d; ID_Adder.data_o = %d\n", CPU.ID_Adder.data1_in, CPU.ID_Adder.data2_in, CPU.ID_Adder.data_o);
+    // // $fdisplay(outfile, "PC.pc_i = %d; PC.pc_o = %d\n", CPU.PC.pc_i, CPU.PC.pc_o);
+    // $fdisplay(outfile, "NoOp = %d; Stall = %d; PCWrite = %d; flush = %d\n", CPU.Hazard_Detection.NoOp_o, CPU.Hazard_Detection.Stall_o, CPU.Hazard_Detection.PCWrite_o, CPU.flush);
+    // $fdisplay(outfile, "Control.MemRead = %d; Control.Branch_o = %d; read_data_1 = %d; read_data_2 = %d\n", CPU.Control.MemRead_o, CPU.Control.Branch_o, CPU.read_data_1, CPU.read_data_2);
+    // $fdisplay(outfile, "ID_EX.MemRead_i = %d; ID_EX.MemRead = %d; ID_EX.RDdata1 = %d; ID_EX.RDdata2 = %d\n", CPU.ID_EX.MemRead_i, CPU.ID_EX.MemRead, CPU.ID_EX.RDdata1, CPU.ID_EX.RDdata2);
     // $fdisplay(outfile, "FU.ForwardA_o = %d; FU.ForwardB_o = %d\n", CPU.Forwarding_Unit.ForwardA_o, CPU.Forwarding_Unit.ForwardB_o);
-    $fdisplay(outfile, "ALU.data1_i = %d; ALU.data2_i = %d\n", CPU.ALU.data1_i, CPU.ALU.data2_i);
-    $fdisplay(outfile, "EX_MEM.ALUResult = %d; EX_MEM.MemRead = %d\n", CPU.EX_MEM.ALUResult, CPU.EX_MEM.MemRead);
-    $fdisplay(outfile, "MEM_WB.ALUResult_o = %d; MEM_WB.RDdata_o = %d\n", CPU.MEM_WB.ALUResult_o, CPU.MEM_WB.RDdata_o);
-    $fdisplay(outfile, "Registers.RegWrite_i = %d; Registers.RDaddr_i = %d; Registers.RDdata_i = %d\n", CPU.Registers.RegWrite_i, CPU.Registers.RDaddr_i, CPU.Registers.RDdata_i);
+    // $fdisplay(outfile, "ALU.data1_i = %d; ALU.data2_i = %d\n", CPU.ALU.data1_i, CPU.ALU.data2_i);
+    // $fdisplay(outfile, "EX_MEM.ALUResult = %d; EX_MEM.MemRead = %d\n", CPU.EX_MEM.ALUResult, CPU.EX_MEM.MemRead);
+    // $fdisplay(outfile, "MEM_WB.ALUResult_o = %d; MEM_WB.RDdata_o = %d\n", CPU.MEM_WB.ALUResult_o, CPU.MEM_WB.RDdata_o);
+    // $fdisplay(outfile, "Registers.RegWrite_i = %d; Registers.RDaddr_i = %d; Registers.RDdata_i = %d\n", CPU.Registers.RegWrite_i, CPU.Registers.RDaddr_i, CPU.Registers.RDdata_i);
+    // $fdisplay(outfile, "HD.IDRs1_i = %d; HD.IDRs2_i = %d; HD.EXRd_i = %d; HD.EXMemRead = %d; PCWrite = %d; HD.NoOp_o = %d;\n", CPU.Hazard_Detection.IDRs1_i, CPU.Hazard_Detection.IDRs2_i, CPU.Hazard_Detection.EXRd_i, CPU.Hazard_Detection.EXMemRead_i, CPU.PCWrite, CPU.Hazard_Detection.NoOp_o);
 
     // print PC
     // DO NOT CHANGE THE OUTPUT FORMAT

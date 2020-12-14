@@ -1,5 +1,6 @@
 module ID_EX
 (
+    start_i,
     clk_i,
     RegWrite_i,
     MemtoReg_i,
@@ -30,6 +31,7 @@ module ID_EX
 );
 
 // Ports
+input           start_i;
 input           clk_i;
 input           RegWrite_i;
 input           MemtoReg_i;
@@ -63,7 +65,7 @@ reg           RegWrite;
 reg           MemtoReg;
 reg           MemRead; 
 reg           MemWrite;
-reg           ALUOp;
+reg   [1:0]   ALUOp;
 reg           ALUSrc;
 reg   [31:0]  RDdata1;
 reg   [31:0]  RDdata2;
@@ -103,6 +105,22 @@ always @(posedge clk_i) begin
     Instruction2 <= Instruction2_i;
     Instruction3 <= Instruction3_i;
     Instruction4 <= Instruction4_i;
+end
+
+always @(negedge start_i) begin
+    RegWrite <= 0;
+    MemtoReg <= 0;
+    MemRead <= 0;
+    MemWrite <= 0;
+    ALUOp <= 0;
+    ALUSrc <= 0;
+    RDdata1 <= 0;
+    RDdata2 <= 0;
+    Imm <= 0;
+    Instruction1 <= 0;
+    Instruction2 <= 0;
+    Instruction3 <= 0;
+    Instruction4 <= 0;
 end
 
 endmodule

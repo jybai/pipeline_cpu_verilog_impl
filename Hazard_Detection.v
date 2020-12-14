@@ -21,7 +21,7 @@ output          NoOp_o;
 // output reg      Stall_o;
 // output reg      NoOp_o;
 
-assign PCWrite_o = (EXMemRead_i && ((EXRd_i == IDRs1_i) || (EXRd_i == IDRs2_i)));
+assign PCWrite_o = !(EXMemRead_i && ((EXRd_i == IDRs1_i) || (EXRd_i == IDRs2_i)));
 assign Stall_o = !PCWrite_o;
 assign NoOp_o = !PCWrite_o;
 
