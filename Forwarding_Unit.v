@@ -36,7 +36,7 @@ always @(*) begin
         && (MEMRd_i == EXRs2_i)) ForwardB_o <= 2'b10;
     else if (WBRegWrite_i
         && (WBRd_i != 0)
-        && !(MEMRegWrite_i && (MEMRd_i != 0) && (MEMRd_i == EXRs1_i))
+        && !(MEMRegWrite_i && (MEMRd_i != 0) && (MEMRd_i == EXRs2_i))
         && (WBRd_i == EXRs2_i)) ForwardB_o <= 2'b01;
     else
         ForwardB_o <= 2'b00;

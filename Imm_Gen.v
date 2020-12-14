@@ -18,7 +18,7 @@ always @ (*) begin
     `SRAI: imm_o <= {{27{instr_i[24]}}, instr_i[24:20]};
     `LW:   imm_o <= {{20{instr_i[31]}}, instr_i[31:20]};
     `SW:   imm_o <= {{20{instr_i[31]}}, instr_i[31:25], instr_i[11:7]};
-    `BEQ:  imm_o <= {{19{instr_i[31]}}, instr_i[31], instr_i[7], instr_i[30:25], instr_i[11:8], 1'b0};
+    `BEQ:  imm_o <= {{20{instr_i[31]}}, instr_i[31], instr_i[7], instr_i[30:25], instr_i[11:8]};
     default: imm_o <= 32'b0;
   endcase
 end
