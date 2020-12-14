@@ -14,11 +14,12 @@ output reg   [31:0] imm_o;
 
 always @ (*) begin
   case ({instr_i[14:12], instr_i[6:0]})
-    `ADDI: imm_o = {{20{instr_i[31]}}, instr_i[31:20]};
-    `SRAI: imm_o = {{27{instr_i[24]}}, instr_i[24:20]};
-    `LW:   imm_o = {{20{instr_i[31]}}, instr_i[31:20]};
-    `SW:   imm_o = {{20{instr_i[31]}}, instr_i[31:25], instr_i[11:7]};
-    `BEQ:  imm_o = {{19{instr_i[31]}}, instr_i[31], instr_i[7], instr_i[30:25], instr_i[11:8], 1'b0};
+    `ADDI: imm_o <= {{20{instr_i[31]}}, instr_i[31:20]};
+    `SRAI: imm_o <= {{27{instr_i[24]}}, instr_i[24:20]};
+    `LW:   imm_o <= {{20{instr_i[31]}}, instr_i[31:20]};
+    `SW:   imm_o <= {{20{instr_i[31]}}, instr_i[31:25], instr_i[11:7]};
+    `BEQ:  imm_o <= {{19{instr_i[31]}}, instr_i[31], instr_i[7], instr_i[30:25], instr_i[11:8], 1'b0};
+    default: imm_o <= 32'b0;
   endcase
 end
 

@@ -42,11 +42,11 @@ assign Instruction4_o = Instruction4;
 
 // Write Data
 always @(posedge clk_i) begin
-    RegWrite = RegWrite_i;
-    MemtoReg = MemtoReg_i;
-    ALUResult = ALUResult_i;
-    RDdata = RDdata_i;
-    Instruction4 = Instruction4_i;
+    RegWrite <= RegWrite_i;
+    MemtoReg <= MemtoReg_i;
+    ALUResult <= ALUResult_i;
+    RDdata <= RDdata_i;
+    Instruction4 <= Instruction4_i;
 end
 
 endmodule

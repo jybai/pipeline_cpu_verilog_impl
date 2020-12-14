@@ -87,10 +87,16 @@ initial begin
     Start = 0;
     
     #(`CYCLE_TIME/4) 
+
+    $fdisplay(outfile, "Registers.RS1addr_i = %d; Control.Op_i = %d\n", CPU.Registers.RS1addr_i, CPU.Control.Op_i);
+    $fdisplay(outfile, "IF_ID.Instruction = %d; IF_ID.Instruction_o = %d; ID_PC = %d; instr = %d; imm_extended = %d\n", CPU.IF_ID.Instruction, CPU.IF_ID.Instruction_o, CPU.instr, CPU.ID_pc, CPU.imm_extended);
+    $fdisplay(outfile, "Control.MemRead = %d; Control.Branch_o = %d; read_data_1 = %d; read_data_2 = %d\n", CPU.Control.MemRead_o, CPU.Control.Branch_o, CPU.read_data_1, CPU.read_data_2);
+    $fdisplay(outfile, "ID_EX.MemRead_i = %d; ID_EX.MemRead = %d; ID_EX.RDdata1 = %d; ID_EX.RDdata2 = %d; ID_EX.Instruction4 = %d\n", CPU.ID_EX.MemRead_i, CPU.ID_EX.MemRead, CPU.ID_EX.RDdata1, CPU.ID_EX.RDdata2, CPU.ID_EX.Instruction4);
+    $fdisplay(outfile, "HD.IDRs1_i = %d; HD.IDRs2_i = %d; HD.EXRd_i = %d; HD.EXMemRead = %d; HD.NoOp_o = %d;\n", CPU.Hazard_Detection.IDRs1_i, CPU.Hazard_Detection.IDRs2_i, CPU.Hazard_Detection.EXRd_i, CPU.Hazard_Detection.EXMemRead_i, CPU.Hazard_Detection.NoOp_o);
+
     Reset = 0;
     Start = 1;
         
-    
 end
   
 always@(posedge Clk) begin
@@ -100,6 +106,23 @@ always@(posedge Clk) begin
     // put in your own signal to count stall and flush
     if(CPU.Hazard_Detection.Stall_o == 1 && CPU.Control.Branch_o == 0) stall = stall + 1;
     if(CPU.flush == 1) flush = flush + 1;  
+
+    // $fdisplay(outfile, "Branch = %d\n", CPU.Branch);
+    $fdisplay(outfile, "WB_WriteData = %d\n", CPU.WB_WriteData);
+    $fdisplay(outfile, "IF_ID.Instruction = %d; IF_ID.Instruction_o = %d; ID_PC = %d; instr = %d; imm_extended = %d\n", CPU.IF_ID.Instruction, CPU.IF_ID.Instruction_o, CPU.instr, CPU.ID_pc, CPU.imm_extended);
+    // $fdisplay(outfile, "Add_PC.data1_in = %d; Add_PC.data2_in = %d; Add_PC.data_o= %d\n", CPU.Add_PC.data1_in, CPU.Add_PC.data2_in, CPU.Add_PC.data_o);
+    // $fdisplay(outfile, "pc_now = %d; pc_next = %d; ID_Adder.data_o = %d\n", CPU.pc_now, CPU.pc_next, CPU.ID_Adder.data_o);
+    // $fdisplay(outfile, "MUX_PC.data1_i = %d; MUX_PC.data2_i = %d; MUX_PC.data_o = %d\n", CPU.MUX_PC.data1_i, CPU.MUX_PC.data2_i, CPU.MUX_PC.data_o);
+    $fdisplay(outfile, "ID_Adder.data1_in = %d; ID_Adder.data2_in = %d; ID_Adder.data_o = %d\n", CPU.ID_Adder.data1_in, CPU.ID_Adder.data2_in, CPU.ID_Adder.data_o);
+    // $fdisplay(outfile, "PC.pc_i = %d; PC.pc_o = %d\n", CPU.PC.pc_i, CPU.PC.pc_o);
+    $fdisplay(outfile, "NoOp = %d; Stall = %d; PCWrite = %d; flush = %d\n", CPU.Hazard_Detection.NoOp_o, CPU.Hazard_Detection.Stall_o, CPU.Hazard_Detection.PCWrite_o, CPU.flush);
+    $fdisplay(outfile, "Control.MemRead = %d; Control.Branch_o = %d; read_data_1 = %d; read_data_2 = %d\n", CPU.Control.MemRead_o, CPU.Control.Branch_o, CPU.read_data_1, CPU.read_data_2);
+    $fdisplay(outfile, "ID_EX.MemRead_i = %d; ID_EX.MemRead = %d; ID_EX.RDdata1 = %d; ID_EX.RDdata2 = %d\n", CPU.ID_EX.MemRead_i, CPU.ID_EX.MemRead, CPU.ID_EX.RDdata1, CPU.ID_EX.RDdata2);
+    // $fdisplay(outfile, "FU.ForwardA_o = %d; FU.ForwardB_o = %d\n", CPU.Forwarding_Unit.ForwardA_o, CPU.Forwarding_Unit.ForwardB_o);
+    $fdisplay(outfile, "ALU.data1_i = %d; ALU.data2_i = %d\n", CPU.ALU.data1_i, CPU.ALU.data2_i);
+    $fdisplay(outfile, "EX_MEM.ALUResult = %d; EX_MEM.MemRead = %d\n", CPU.EX_MEM.ALUResult, CPU.EX_MEM.MemRead);
+    $fdisplay(outfile, "MEM_WB.ALUResult_o = %d; MEM_WB.RDdata_o = %d\n", CPU.MEM_WB.ALUResult_o, CPU.MEM_WB.RDdata_o);
+    $fdisplay(outfile, "Registers.RegWrite_i = %d; Registers.RDaddr_i = %d; Registers.RDdata_i = %d\n", CPU.Registers.RegWrite_i, CPU.Registers.RDaddr_i, CPU.Registers.RDdata_i);
 
     // print PC
     // DO NOT CHANGE THE OUTPUT FORMAT

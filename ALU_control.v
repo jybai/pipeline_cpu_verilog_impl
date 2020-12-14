@@ -32,19 +32,19 @@ output reg     [2:0] ALUCtrl_o;
 always @ (*) begin
   if (ALUOp_i == `ALUOP_RTYPE) begin
     case (funct_i)
-      `FUNCT_AND: ALUCtrl_o = `AND;
-      `FUNCT_XOR: ALUCtrl_o = `XOR;
-      `FUNCT_SLL: ALUCtrl_o = `SLL;
-      `FUNCT_ADD: ALUCtrl_o = `ADD;
-      `FUNCT_SUB: ALUCtrl_o = `SUB;
-      `FUNCT_MUL: ALUCtrl_o = `MUL;
+      `FUNCT_AND: ALUCtrl_o <= `AND;
+      `FUNCT_XOR: ALUCtrl_o <= `XOR;
+      `FUNCT_SLL: ALUCtrl_o <= `SLL;
+      `FUNCT_ADD: ALUCtrl_o <= `ADD;
+      `FUNCT_SUB: ALUCtrl_o <= `SUB;
+      `FUNCT_MUL: ALUCtrl_o <= `MUL;
     endcase
   end
   else if (ALUOp_i == `ALUOP_IMM) begin
     case (funct_i[2:0])
-      `FUNCT_ADDI_BEQ: ALUCtrl_o = `ADD;
-      `FUNCT_LSW: ALUCtrl_o = `ADD;
-      `FUNCT_SRAI: ALUCtrl_o = `SRAI;
+      `FUNCT_ADDI_BEQ: ALUCtrl_o <= `ADD;
+      `FUNCT_LSW: ALUCtrl_o <= `ADD;
+      `FUNCT_SRAI: ALUCtrl_o <= `SRAI;
     endcase
   end
 end

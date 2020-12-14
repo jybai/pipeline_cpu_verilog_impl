@@ -22,10 +22,10 @@ output reg  [31:0] data_o;
 
 always @ (*) begin
   case (select_i)
-    `DATA1: data_o = data1_i;
-    `DATA2: data_o = data2_i;
-    `DATA3: data_o = data3_i;
-    `DATA4: data_o = data4_i;
+    `DATA1: data_o <= data1_i;
+    `DATA2: data_o <= data2_i;
+    `DATA3: data_o <= data3_i;
+    `DATA4: data_o <= data4_i;
   endcase
 end
 

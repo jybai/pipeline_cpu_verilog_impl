@@ -31,7 +31,7 @@ wire                Branch;
 wire                PCWrite;
 wire                flush;
 
-assign flush = (Control.Branch_o) || (read_data_1 == read_data_2);
+assign flush = (Control.Branch_o) && (read_data_1 == read_data_2);
 
 wire         [31:0] ID_pc;
 wire         [31:0] WB_WriteData;
@@ -54,12 +54,22 @@ Adder Add_PC(
     .data_o     (pc_next)
 );
 
+// MUX32 MUX_PC(
+//     .data1_i    (pc_next),
+//     .data2_i    (ID_Adder.data_o),
+//     .select_i   (flush),
+//     .data_o     (PC.pc_i)
+// );
+
 MUX32 MUX_PC(
     .data1_i    (pc_next),
     .data2_i    (ID_Adder.data_o),
     .select_i   (flush),
     .data_o     (PC.pc_i)
 );
+
+// flush = x
+// data_o = x if select_i = 1
 
 PC PC(
     .clk_i      (clk_i),
@@ -70,6 +80,15 @@ PC PC(
     .pc_o       (pc_now)
 );
 
+// PC PC(
+//     .clk_i      (clk_i),
+//     .rst_i      (rst_i),
+//     .start_i    (start_i),
+//     .PCWrite_i  (PCWrite),
+//     .pc_i       (pc_next),
+//     .pc_o       (pc_now)
+// );
+
 Instruction_Memory Instruction_Memory(
     .addr_i     (pc_now),
     .instr_o    (IF_ID.Instruction_i)
@@ -77,8 +96,8 @@ Instruction_Memory Instruction_Memory(
 
 Registers Registers(
     .clk_i      (clk_i),
-    .RS1addr_i   (IF_ID.Instruction_o[19:15]),
-    .RS2addr_i   (IF_ID.Instruction_o[24:20]),
+    .RS1addr_i   (instr[19:15]),
+    .RS2addr_i   (instr[24:20]),
     .RDaddr_i   (MEM_WB.Instruction4_o), 
     .RDdata_i   (WB_WriteData),
     .RegWrite_i (MEM_WB.RegWrite_o), 
@@ -229,7 +248,7 @@ Hazard_Detection Hazard_Detection(
     .IDRs2_i        (instr[24:20]),
     .EXRd_i         (ID_EX.Instruction4_o),
     .EXMemRead_i    (ID_EX.MemRead_o),
-    .PCWrite_o      (PC.PCWrite_i),
+    .PCWrite_o      (PCWrite),
     .Stall_o        (IF_ID.stall_i),
     .NoOp_o         (Control.NoOp_i)
 );
