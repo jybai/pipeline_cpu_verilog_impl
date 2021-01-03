@@ -2,6 +2,7 @@ module EX_MEM
 (
     start_i,
     clk_i,
+    stall_i,
     RegWrite_i,
     MemtoReg_i,
     MemRead_i, 
@@ -21,6 +22,7 @@ module EX_MEM
 // Ports
 input           start_i;
 input           clk_i;
+input           stall_i;
 input           RegWrite_i;
 input           MemtoReg_i;
 input           MemRead_i; 
@@ -56,13 +58,15 @@ assign Instruction4_o = Instruction4;
 
 // Write Data
 always @(posedge clk_i) begin
-    RegWrite <= RegWrite_i;
-    MemtoReg <= MemtoReg_i;
-    MemRead <= MemRead_i;
-    MemWrite <= MemWrite_i;
-    ALUResult <= ALUResult_i;
-    MUX2Result <= MUX2Result_i;
-    Instruction4 <= Instruction4_i;
+    if (!stall_i) begin
+        RegWrite <= RegWrite_i;
+        MemtoReg <= MemtoReg_i;
+        MemRead <= MemRead_i;
+        MemWrite <= MemWrite_i;
+        ALUResult <= ALUResult_i;
+        MUX2Result <= MUX2Result_i;
+        Instruction4 <= Instruction4_i;
+    end
 end
 
 always @(negedge start_i) begin

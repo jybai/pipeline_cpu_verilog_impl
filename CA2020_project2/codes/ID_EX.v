@@ -2,6 +2,7 @@ module ID_EX
 (
     start_i,
     clk_i,
+    stall_i,
     RegWrite_i,
     MemtoReg_i,
     MemRead_i, 
@@ -33,6 +34,7 @@ module ID_EX
 // Ports
 input           start_i;
 input           clk_i;
+input           stall_i;
 input           RegWrite_i;
 input           MemtoReg_i;
 input           MemRead_i; 
@@ -108,19 +110,21 @@ always @(posedge clk_i) begin
 end
 
 always @(negedge start_i) begin
-    RegWrite <= 0;
-    MemtoReg <= 0;
-    MemRead <= 0;
-    MemWrite <= 0;
-    ALUOp <= 0;
-    ALUSrc <= 0;
-    RDdata1 <= 0;
-    RDdata2 <= 0;
-    Imm <= 0;
-    Instruction1 <= 0;
-    Instruction2 <= 0;
-    Instruction3 <= 0;
-    Instruction4 <= 0;
+    if (!stall_i) begin
+        RegWrite <= 0;
+        MemtoReg <= 0;
+        MemRead <= 0;
+        MemWrite <= 0;
+        ALUOp <= 0;
+        ALUSrc <= 0;
+        RDdata1 <= 0;
+        RDdata2 <= 0;
+        Imm <= 0;
+        Instruction1 <= 0;
+        Instruction2 <= 0;
+        Instruction3 <= 0;
+        Instruction4 <= 0;
+    end
 end
 
 endmodule
