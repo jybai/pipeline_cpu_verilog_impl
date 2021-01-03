@@ -33,9 +33,8 @@ always @(posedge clk_i) begin
     if (!stall_i) begin
         pc <= pc_i;
         Instruction <= Instruction_i;
+        if (flush_i) Instruction <= 0;
     end
-
-    if (flush_i) Instruction <= 0;
 end
 
 always @(negedge start_i) begin
