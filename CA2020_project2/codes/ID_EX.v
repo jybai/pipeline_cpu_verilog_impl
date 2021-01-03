@@ -94,37 +94,37 @@ assign Instruction4_o = Instruction4;
 
 // Write Data
 always @(posedge clk_i) begin
-    RegWrite <= RegWrite_i;
-    MemtoReg <= MemtoReg_i;
-    MemRead <= MemRead_i;
-    MemWrite <= MemWrite_i;
-    ALUOp <= ALUOp_i;
-    ALUSrc <= ALUSrc_i;
-    RDdata1 <= RDdata1_i;
-    RDdata2 <= RDdata2_i;
-    Imm <= Imm_i;
-    Instruction1 <= Instruction1_i;
-    Instruction2 <= Instruction2_i;
-    Instruction3 <= Instruction3_i;
-    Instruction4 <= Instruction4_i;
+    if (!stall_i) begin
+        RegWrite <= RegWrite_i;
+        MemtoReg <= MemtoReg_i;
+        MemRead <= MemRead_i;
+        MemWrite <= MemWrite_i;
+        ALUOp <= ALUOp_i;
+        ALUSrc <= ALUSrc_i;
+        RDdata1 <= RDdata1_i;
+        RDdata2 <= RDdata2_i;
+        Imm <= Imm_i;
+        Instruction1 <= Instruction1_i;
+        Instruction2 <= Instruction2_i;
+        Instruction3 <= Instruction3_i;
+        Instruction4 <= Instruction4_i;
+    end
 end
 
 always @(negedge start_i) begin
-    if (!stall_i) begin
-        RegWrite <= 0;
-        MemtoReg <= 0;
-        MemRead <= 0;
-        MemWrite <= 0;
-        ALUOp <= 0;
-        ALUSrc <= 0;
-        RDdata1 <= 0;
-        RDdata2 <= 0;
-        Imm <= 0;
-        Instruction1 <= 0;
-        Instruction2 <= 0;
-        Instruction3 <= 0;
-        Instruction4 <= 0;
-    end
+    RegWrite <= 0;
+    MemtoReg <= 0;
+    MemRead <= 0;
+    MemWrite <= 0;
+    ALUOp <= 0;
+    ALUSrc <= 0;
+    RDdata1 <= 0;
+    RDdata2 <= 0;
+    Imm <= 0;
+    Instruction1 <= 0;
+    Instruction2 <= 0;
+    Instruction3 <= 0;
+    Instruction4 <= 0;
 end
 
 endmodule

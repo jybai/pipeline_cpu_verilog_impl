@@ -63,7 +63,6 @@ always@(posedge clk_i or posedge rst_i) begin
         // Miss: write to the to-be-evicted block
             tag[addr_i][rd_bit] <= tag_i;
             data[addr_i][rd_bit] <= data_i;
-            to_evict[addr_i] <= 0;
         end
     end
     if (enable_i) begin

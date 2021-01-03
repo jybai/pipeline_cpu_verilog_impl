@@ -47,6 +47,7 @@ wire                Branch;
 wire                PCWrite;
 wire                flush;
 wire                MemStall;
+wire                Hazard_Detection_Stall;
 
 assign flush = (Control.Branch_o) && (read_data_1 == read_data_2);
 // assign foobar = ALU.data_o;
@@ -135,7 +136,7 @@ ALU_Control ALU_Control(
 IF_ID IF_ID(
     .start_i    (start_i),
     .clk_i      (clk_i),
-    .stall_i    (Hazard_Detection.Stall_o || MemStall),
+    .stall_i    (Hazard_Detection_Stall || MemStall),
     .flush_i    (flush),
     .pc_i       (PC.pc_o),
     .Instruction_i  (Instruction_Memory.instr_o),
@@ -152,7 +153,7 @@ Adder ID_Adder(
 ID_EX ID_EX(
     .start_i        (start_i),
     .clk_i          (clk_i),
-    .stall_i        (stall_i),
+    .stall_i        (MemStall),
     .RegWrite_i     (RegWrite),
     .MemtoReg_i     (MemtoReg),
     .MemRead_i      (MemRead),
@@ -202,7 +203,7 @@ MUX32_4WAY MUX_EX2(
 EX_MEM EX_MEM(
     .start_i        (start_i),
     .clk_i          (clk_i),
-    .stall_i        (stall_i),
+    .stall_i        (MemStall),
     .RegWrite_i     (ID_EX.RegWrite_o),
     .MemtoReg_i     (ID_EX.MemtoReg_o),
     .MemRead_i      (ID_EX.MemRead_o),
@@ -239,13 +240,13 @@ dcache_controller dcache(
     .cpu_MemRead_i  (EX_MEM.MemRead_o),
     .cpu_MemWrite_i (EX_MEM.MemWrite_o),
     .cpu_data_o     (MEM_WB.RDdata_i),
-    .cpu_stall_o    (stall_cache)
+    .cpu_stall_o    (MemStall)
 );
 
 MEM_WB MEM_WB(
     .start_i        (start_i),
     .clk_i          (clk_i),
-    .stall_i        (stall_i),
+    .stall_i        (MemStall),
     .RegWrite_i     (EX_MEM.RegWrite_o),
     .MemtoReg_i     (EX_MEM.MemtoReg_o),
     .ALUResult_i    (EX_MEM.ALUResult_o),
@@ -271,7 +272,7 @@ Hazard_Detection Hazard_Detection(
     .EXRd_i         (ID_EX.Instruction4_o),
     .EXMemRead_i    (ID_EX.MemRead_o),
     .PCWrite_o      (PCWrite),
-    .Stall_o        (IF_ID.stall_i),
+    .Stall_o        (Hazard_Detection_Stall),
     .NoOp_o         (Control.NoOp_i)
 );
 

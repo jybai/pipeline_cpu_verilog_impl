@@ -122,7 +122,16 @@ assign    r_hit_data = (hit) ? sram_cache_data : mem_data_i;
 // read data :  256-bit to 32-bit
 always@(cpu_offset or r_hit_data) begin
     // TODO: add your code here! (cpu_data=...?)
-    cpu_data <= (r_hit_data >> ((31 - cpu_offset) * 8 - 1));
+    case (cpu_offset)
+        28:  cpu_data <= r_hit_data[255:224];
+        24:  cpu_data <= r_hit_data[223:192];
+        20:  cpu_data <= r_hit_data[191:160];
+        16:  cpu_data <= r_hit_data[159:128];
+        12:  cpu_data <= r_hit_data[127:96];
+        8:   cpu_data <= r_hit_data[95:64];
+        4:   cpu_data <= r_hit_data[63:32];
+        0:   cpu_data <= r_hit_data[31:0];
+    endcase
 end
 
 
@@ -130,14 +139,14 @@ end
 always@(cpu_offset or r_hit_data or cpu_data_i) begin
     // TODO: add your code here! (w_hit_data=...?)
     case (cpu_offset)
-        0:  w_hit_data <= {cpu_data_i, r_hit_data[223:0]};
-        4:  w_hit_data <= {r_hit_data[255:224], cpu_data_i, r_hit_data[191:0]};
-        8:  w_hit_data <= {r_hit_data[255:192], cpu_data_i, r_hit_data[159:0]};
-        12: w_hit_data <= {r_hit_data[255:160], cpu_data_i, r_hit_data[127:0]};
-        16: w_hit_data <= {r_hit_data[255:128], cpu_data_i, r_hit_data[95:0]};
-        20: w_hit_data <= {r_hit_data[255:96], cpu_data_i, r_hit_data[63:0]};
-        24: w_hit_data <= {r_hit_data[255:64], cpu_data_i, r_hit_data[31:0]};
-        28: w_hit_data <= {r_hit_data[255:32], cpu_data_i};
+        28: w_hit_data <= {cpu_data_i, r_hit_data[223:0]};
+        24: w_hit_data <= {r_hit_data[255:224], cpu_data_i, r_hit_data[191:0]};
+        20: w_hit_data <= {r_hit_data[255:192], cpu_data_i, r_hit_data[159:0]};
+        16: w_hit_data <= {r_hit_data[255:160], cpu_data_i, r_hit_data[127:0]};
+        12: w_hit_data <= {r_hit_data[255:128], cpu_data_i, r_hit_data[95:0]};
+        8:  w_hit_data <= {r_hit_data[255:96], cpu_data_i, r_hit_data[63:0]};
+        4:  w_hit_data <= {r_hit_data[255:64], cpu_data_i, r_hit_data[31:0]};
+        0:  w_hit_data <= {r_hit_data[255:32], cpu_data_i};
     endcase
 end
 
