@@ -1,14 +1,28 @@
 module CPU
 (
-    clk_i, 
+    clk_i,
     rst_i,
-    start_i
+    start_i,
+
+    mem_data_i,
+    mem_ack_i,
+    mem_data_o,
+    mem_addr_o,
+    mem_enable_o,
+    mem_write_o
 );
 
 // Ports
 input               clk_i;
 input               rst_i;
 input               start_i;
+
+input       [255:0] mem_data_i;
+input               mem_ack_i;
+output      [255:0] mem_data_o;
+output      [31:0]  mem_addr_o;
+output              mem_enable_o;
+output              mem_write_o;
 
 wire          [31:0] pc_next;
 wire          [31:0] pc_now;
@@ -32,6 +46,7 @@ wire                MemWrite;
 wire                Branch;
 wire                PCWrite;
 wire                flush;
+wire                MemStall;
 
 assign flush = (Control.Branch_o) && (read_data_1 == read_data_2);
 // assign foobar = ALU.data_o;
@@ -68,6 +83,7 @@ PC PC(
     .clk_i      (clk_i),
     .rst_i      (rst_i),
     .start_i    (start_i),
+    .stall_i    (MemStall),
     .PCWrite_i  (PCWrite),
     .pc_i       (MUX_PC.data_o),
     .pc_o       (pc_now)
@@ -82,11 +98,11 @@ Registers Registers(
     .clk_i      (clk_i),
     .RS1addr_i   (instr[19:15]),
     .RS2addr_i   (instr[24:20]),
-    .RDaddr_i   (MEM_WB.Instruction4_o), 
+    .RDaddr_i   (MEM_WB.Instruction4_o),
     .RDdata_i   (WB_WriteData),
-    .RegWrite_i (MEM_WB.RegWrite_o), 
-    .RS1data_o   (read_data_1), 
-    .RS2data_o   (read_data_2) 
+    .RegWrite_i (MEM_WB.RegWrite_o),
+    .RS1data_o   (read_data_1),
+    .RS2data_o   (read_data_2)
 );
 
 MUX32 MUX_ALUSrc(
@@ -100,7 +116,7 @@ Imm_Gen Imm_Gen(
     .instr_i    (instr),
     .imm_o      (imm_extended)
 );
-  
+
 ALU ALU(
     .data1_i    (MUX_EX1.data_o),
     .data2_i    (MUX_ALUSrc.data_o),
@@ -119,7 +135,7 @@ ALU_Control ALU_Control(
 IF_ID IF_ID(
     .start_i    (start_i),
     .clk_i      (clk_i),
-    .stall_i    (Hazard_Detection.Stall_o),
+    .stall_i    (Hazard_Detection.Stall_o || MemStall),
     .flush_i    (flush),
     .pc_i       (PC.pc_o),
     .Instruction_i  (Instruction_Memory.instr_o),
@@ -136,9 +152,10 @@ Adder ID_Adder(
 ID_EX ID_EX(
     .start_i        (start_i),
     .clk_i          (clk_i),
+    .stall_i        (stall_i),
     .RegWrite_i     (RegWrite),
     .MemtoReg_i     (MemtoReg),
-    .MemRead_i      (MemRead), 
+    .MemRead_i      (MemRead),
     .MemWrite_i     (MemWrite),
     .ALUOp_i        (ALUOp),
     .ALUSrc_i       (ALUSrc),
@@ -185,9 +202,10 @@ MUX32_4WAY MUX_EX2(
 EX_MEM EX_MEM(
     .start_i        (start_i),
     .clk_i          (clk_i),
+    .stall_i        (stall_i),
     .RegWrite_i     (ID_EX.RegWrite_o),
     .MemtoReg_i     (ID_EX.MemtoReg_o),
-    .MemRead_i      (ID_EX.MemRead_o), 
+    .MemRead_i      (ID_EX.MemRead_o),
     .MemWrite_i     (ID_EX.MemWrite_o),
     // .ALUResult_i    (ALU.data_o),
     .ALUResult_i    (foobar),
@@ -195,29 +213,43 @@ EX_MEM EX_MEM(
     .Instruction4_i (ID_EX.Instruction4_o),
     .RegWrite_o     (MEM_WB.RegWrite_i),
     .MemtoReg_o     (MEM_WB.MemtoReg_i),
-    .MemRead_o      (Data_Memory.MemRead_i), 
-    .MemWrite_o     (Data_Memory.MemWrite_i),
-    .ALUResult_o    (Data_Memory.addr_i),
-    .MUX2Result_o   (Data_Memory.data_i),
+    .MemRead_o      (dcache.cpu_MemRead_i),
+    .MemWrite_o     (dcache.cpu_MemWrite_i),
+    .ALUResult_o    (dcache.cpu_addr_i),
+    .MUX2Result_o   (dcache.cpu_data_i),
     .Instruction4_o (MEM_WB.Instruction4_i)
 );
 
-Data_Memory Data_Memory(
+dcache_controller dcache(
+    // System clock, reset and stall
     .clk_i          (clk_i),
-    .addr_i         (EX_MEM.ALUResult_o), 
-    .MemRead_i      (EX_MEM.MemRead_o),
-    .MemWrite_i     (EX_MEM.MemWrite_o),
-    .data_i         (EX_MEM.MUX2Result_o),
-    .data_o         (MEM_WB.RDdata_i)
+    .rst_i          (rst_i),
+
+    // to Data Memory interface
+    .mem_data_i     (mem_data_i),
+    .mem_ack_i      (mem_ack_i),
+    .mem_data_o     (mem_data_o),
+    .mem_addr_o     (mem_addr_o),
+    .mem_enable_o   (mem_enable_o),
+    .mem_write_o    (mem_write_o),
+
+    // to CPU interface
+    .cpu_data_i     (EX_MEM.MUX2Result_o),
+    .cpu_addr_i     (EX_MEM.ALUResult_o),
+    .cpu_MemRead_i  (EX_MEM.MemRead_o),
+    .cpu_MemWrite_i (EX_MEM.MemWrite_o),
+    .cpu_data_o     (MEM_WB.RDdata_i),
+    .cpu_stall_o    (stall_cache)
 );
 
 MEM_WB MEM_WB(
     .start_i        (start_i),
     .clk_i          (clk_i),
+    .stall_i        (stall_i),
     .RegWrite_i     (EX_MEM.RegWrite_o),
     .MemtoReg_i     (EX_MEM.MemtoReg_o),
     .ALUResult_i    (EX_MEM.ALUResult_o),
-    .RDdata_i       (Data_Memory.data_o),
+    .RDdata_i       (dcache.cpu_data_o),
     .Instruction4_i (EX_MEM.Instruction4_o),
     .RegWrite_o     (Registers.RegWrite_i),
     .MemtoReg_o     (WB_MUX.select_i),
